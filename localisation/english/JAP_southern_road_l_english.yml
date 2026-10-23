@@ -1,0 +1,47 @@
+﻿l_english:
+ # Focus description override
+ JAP_strike_the_southern_road_desc:0 "The time has come to set our plan in motion. We will strike south and take the resource-rich Western colonies for ourselves. With this swift and decisive strike, we should be able to reduce the enemies' ability to fight before it has even properly started. Should our Tripartite partners already hold these lands, we will first demand their transfer through diplomacy, and only draw the sword if they refuse. Tennoheika Banzai!"
+
+ # Custom effect tooltips
+ JAP_sr_negotiations_tt:0 "§YTripartite negotiations:§! If any of the target territories are held by a Tripartite Pact signatory, Japan will open negotiations before declaring war. Refusal will grant wargoals."
+ JAP_sr_honor_pact_tt:0 "The territories will be transferred to Japan. Our ally's war in Asia is our war."
+ JAP_sr_demand_payment_tt:0 "Japan may take the territories, but we will demand resource rights and factories in return."
+ JAP_sr_refuse_pact_tt:0 "Japan will be forced to take the territories by force. The Tripartite Pact will be broken."
+ JAP_sr_accept_payment_tt:0 "The territories will be transferred. Japan will grant [FROM.GetName] resource rights in the ceded lands and the industry of Batavia."
+ JAP_sr_refuse_payment_tt:0 "The Tripartite Pact will be broken. Japan will gain wargoals on the territories."
+ JAP_sr_break_pact_tt:0 "Japan gains wargoals on the territories held by [FROM.GetName]. The Tripartite Pact is broken."
+ JAP_sr_break_pact_partner_tt:0 "The Tripartite Pact is broken. Japan gains wargoals on our territories in East Asia."
+ JAP_sr_compensation_tt:0 "The territories are transferred to Japan. We receive resource rights in West Java and the tungsten of Pahang, as well as the industrial output of Batavia."
+
+ # Event 1 - Request to the Tripartite partner
+ JAP_southern_road.1.t:0 "Japan Requests Territories in East Asia"
+ JAP_southern_road.1.desc:0 "The swift collapse of the Western colonial empires has left the riches of Southeast Asia without a master. From Batavia to Saigon, the oil wells, rubber plantations, and tin mines that once fed the British, Dutch, and French war machines now lie within reach of the Axis.\n\nTokyo has formally requested that these territories be transferred to Japanese administration, arguing that the Empire cannot sustain its war in China, let alone a Pacific campaign, without secure access to their resources. The Imperial Navy speaks of a 'Greater East Asia Co-Prosperity Sphere'; the Foreign Ministry speaks more bluntly of oil.\n\nWe must now decide whether the Tripartite Pact obliges us to share the spoils, or whether Japan must be made to pay for what our soldiers have won."
+ JAP_southern_road.1.a:0 "We will honor the Tripartite Pact."
+ JAP_southern_road.1.b:0 "We require compensation."
+ JAP_southern_road.1.c:0 "We will not relinquish what we have bled for."
+
+ # Event 2 - Cession notification to Japan
+ JAP_southern_road.2.t:0 "[FROM.GetName] Cedes Territories in East Asia"
+ JAP_southern_road.2.desc:0 "The [FROM.GetAdjective] government has agreed to transfer the former Western colonies to Japanese administration. The oil fields of Sumatra and Borneo, the rubber plantations of Malaya, and the mines of Indochina are now ours.\n\nThe Imperial General Staff can at last plan the next stage of the war without the fear of fighting our own allies. In Tokyo, the news is greeted with celebrations, and with quiet relief in the Navy Ministry, where the fuel reserves had been counted and recounted."
+ JAP_southern_road.2.a:0 "A great day for the Empire."
+
+ # Event 3 - Compensation demand to Japan
+ JAP_southern_road.3.t:0 "[FROM.GetName] Demands Payment for Territories in East Asia"
+ JAP_southern_road.3.desc:0 "[FROM.GetName] has agreed to cede the territories, but not without a price. Their diplomats demand resource rights in the lands now passing to Japan, along with a share of Japanese industrial production.\n\nThe Foreign Ministry warns that refusal may shatter the Tripartite Pact at the very moment the Empire needs allies. The Navy insists that Japan must not be seen to pay tribute to Europeans. In the end, the decision rests with the Emperor's government: pay the price, or take the territories by force."
+ JAP_southern_road.3.a:0 "Agree to payments."
+ JAP_southern_road.3.b:0 "We will not negotiate our demands!"
+
+ # Event 4 - Pact broken notification to Japan
+ JAP_southern_road.4.t:0 "[FROM.GetName] Breaks the Tripartite Pact"
+ JAP_southern_road.4.desc:0 "The [FROM.GetAdjective] government has rejected Japan's request and renounced the Tripartite Pact. What we call realism, Tokyo calls betrayal.\n\nThe Imperial General Staff has been ordered to prepare for the seizure of the disputed territories by force. The path south is open, but it will be paved with the blood of former allies, and the Empire will remember who stood with it and who did not."
+ JAP_southern_road.4.a:0 "They will regret this."
+
+ # Event 5 - Japan accepts the partner's terms
+ JAP_southern_road.5.t:0 "Japan Accepts Our Terms"
+ JAP_southern_road.5.desc:0 "Tokyo has accepted our conditions. The territories will be transferred to Japanese administration, and in return Japan will grant us resource rights in the ceded lands and a share of its industrial output.\n\nIt is not the victory our soldiers deserved, but it is a victory nonetheless, and it keeps the Tripartite Pact intact."
+ JAP_southern_road.5.a:0 "A profitable arrangement."
+
+ # Event 6 - Japan rejects the partner's terms
+ JAP_southern_road.6.t:0 "Japan Rejects Our Demands"
+ JAP_southern_road.6.desc:0 "Tokyo has refused our terms. The Japanese government calls our demands extortion and declares that the Empire will not bargain for what it believes is rightfully theirs.\n\nThe Tripartite Pact is dead. Our diplomats have been recalled, and reports from the Pacific suggest that Japanese forces are already preparing for war."
+ JAP_southern_road.6.a:0 "Then we shall settle this by force."

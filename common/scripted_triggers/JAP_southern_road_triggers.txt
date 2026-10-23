@@ -1,0 +1,277 @@
+# Scripted triggers for the Southern Road Tripartite negotiations.
+# Used by the JAP_strike_the_southern_road focus override and JAP_southern_road events.
+
+# All states that the historical Southern Resource Area focus cares about.
+JAP_sr_target_state = {
+	OR = {
+		# Dutch East Indies
+		state = 334
+		state = 335
+		state = 667
+		state = 668
+		state = 669
+		state = 672
+		state = 673
+		state = 738
+		state = 1022
+		state = 1047
+		state = 1048
+		state = 1049
+		state = 1050
+		state = 1051
+		state = 1052
+		state = 1053
+		state = 1054
+		state = 1055
+		state = 1056
+		state = 1057
+		state = 1058
+		# Malaya and British Borneo
+		state = 333
+		state = 336
+		state = 1023
+		state = 1024
+		state = 1059
+		state = 1060
+		state = 1061
+		state = 1062
+		state = 1063
+		state = 1064
+		# Philippines
+		state = 327
+		state = 623
+		state = 624
+		state = 625
+		state = 626
+		state = 627
+		state = 628
+		state = 1025
+		state = 1026
+		state = 1027
+		# French Indochina
+		state = 286
+		state = 670
+		state = 671
+		state = 741
+	}
+}
+
+# A country that Japan should treat as a Tripartite Pact partner for this chain.
+# Germany and Italy are the core signatories; their puppets and other Axis members
+# are covered as well. The pact is considered active if Japan has signed it, or if
+# Japan has somehow joined the Axis directly.
+JAP_sr_is_tripartite_signer = {
+	JAP = {
+		OR = {
+			has_completed_focus = JAP_sea_tripartite_pact
+			AND = {
+				country_exists = GER
+				is_in_faction_with = GER
+			}
+			AND = {
+				country_exists = ITA
+				is_in_faction_with = ITA
+			}
+		}
+	}
+	NOT = { has_war_with = JAP }
+	OR = {
+		AND = {
+			tag = GER
+			has_government = fascism
+		}
+		AND = {
+			tag = ITA
+			has_government = fascism
+		}
+		AND = {
+			country_exists = GER
+			is_in_faction_with = GER
+			GER = { has_government = fascism }
+		}
+		AND = {
+			country_exists = ITA
+			is_in_faction_with = ITA
+			ITA = { has_government = fascism }
+		}
+		AND = {
+			country_exists = GER
+			is_subject_of = GER
+			GER = { has_government = fascism }
+		}
+		AND = {
+			country_exists = ITA
+			is_subject_of = ITA
+			ITA = { has_government = fascism }
+		}
+	}
+}
+
+# True if the country in scope, or one of its direct subjects, controls any target state.
+JAP_sr_controls_target_states = {
+	OR = {
+		any_controlled_state = {
+			JAP_sr_target_state = yes
+		}
+		any_country = {
+			is_subject_of = PREV
+			any_controlled_state = {
+				JAP_sr_target_state = yes
+			}
+		}
+	}
+}
+
+# Region checks used to skip the vanilla wargoal branches when a Tripartite
+# signatory already holds the territory. The diplomatic event will handle it.
+JAP_sr_region_indonesia_held_by_signer = {
+	any_state = {
+		OR = {
+			state = 334
+			state = 335
+			state = 667
+			state = 668
+			state = 669
+			state = 672
+			state = 673
+			state = 738
+			state = 1022
+			state = 1047
+			state = 1048
+			state = 1049
+			state = 1050
+			state = 1051
+			state = 1052
+			state = 1053
+			state = 1054
+			state = 1055
+			state = 1056
+			state = 1057
+			state = 1058
+		}
+		controller = {
+			JAP_sr_is_tripartite_signer = yes
+		}
+	}
+}
+
+JAP_sr_region_malaya_held_by_signer = {
+	any_state = {
+		OR = {
+			state = 333
+			state = 336
+			state = 1023
+			state = 1024
+			state = 1059
+			state = 1060
+			state = 1061
+			state = 1062
+			state = 1063
+			state = 1064
+		}
+		controller = {
+			JAP_sr_is_tripartite_signer = yes
+		}
+	}
+}
+
+JAP_sr_region_philippines_held_by_signer = {
+	any_state = {
+		OR = {
+			state = 327
+			state = 623
+			state = 624
+			state = 625
+			state = 626
+			state = 627
+			state = 628
+			state = 1025
+			state = 1026
+			state = 1027
+		}
+		controller = {
+			JAP_sr_is_tripartite_signer = yes
+		}
+	}
+}
+
+JAP_sr_region_indochina_held_by_signer = {
+	any_state = {
+		OR = {
+			state = 286
+			state = 670
+			state = 671
+			state = 741
+		}
+		controller = {
+			JAP_sr_is_tripartite_signer = yes
+		}
+	}
+}
+
+JAP_sr_any_target_state_held_by_signer = {
+	any_state = {
+		JAP_sr_target_state = yes
+		controller = {
+			JAP_sr_is_tripartite_signer = yes
+		}
+	}
+}
+
+# Japan's AI uses this to decide whether to pay the Tripartite partner's price.
+# Japan only accepts when the Axis is at war with the USSR AND the USSR is losing
+# or the Axis is clearly stronger. Otherwise Tokyo sees weakness and refuses.
+JAP_sr_should_accept_axis_demands = {
+	# Is the Axis at war with the USSR (or has the USSR already been defeated)?
+	OR = {
+		NOT = { country_exists = SOV }
+		AND = {
+			country_exists = SOV
+			OR = {
+				AND = {
+					country_exists = GER
+					SOV = { has_war_with = GER }
+				}
+				AND = {
+					country_exists = ITA
+					SOV = { has_war_with = ITA }
+				}
+			}
+		}
+	}
+	# Is the USSR losing, or are the Axis forces too great?
+	OR = {
+		NOT = { country_exists = SOV }
+		AND = {
+			country_exists = SOV
+			SOV = { surrender_progress > 0.5 }
+		}
+		AND = {
+			country_exists = GER
+			GER = {
+				strength_ratio = {
+					tag = JAP
+					ratio > 1.5
+				}
+			}
+		}
+		AND = {
+			country_exists = ITA
+			ITA = {
+				strength_ratio = {
+					tag = JAP
+					ratio > 1.5
+				}
+			}
+		}
+		AND = {
+			country_exists = FROM
+			FROM = {
+				strength_ratio = {
+					tag = JAP
+					ratio > 1.5
+				}
+			}
+		}
+	}
+}

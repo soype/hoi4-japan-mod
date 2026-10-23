@@ -1,0 +1,226 @@
+# Tripartite Pact negotiations for the Southern Resource Area.
+# ROOT is always the country receiving the event; FROM is the country that sent it.
+# In events sent to a Tripartite partner, FROM is Japan.
+# In events sent to Japan, FROM is the Tripartite partner.
+
+add_namespace = JAP_southern_road
+
+# 1. Sent to a Tripartite Pact partner that already holds target territory.
+country_event = {
+	id = JAP_southern_road.1
+	title = JAP_southern_road.1.t
+	desc = JAP_southern_road.1.desc
+	picture = GFX_report_event_japan_europe_pact
+	is_triggered_only = yes
+
+	immediate = {
+		set_country_flag = JAP_sr_request_received
+	}
+
+	# Honor the pact and hand the territories over.
+	option = {
+		name = JAP_southern_road.1.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 30
+				OR = {
+					has_war_with = SOV
+					has_war_with = ENG
+					has_war_with = USA
+				}
+			}
+			modifier = {
+				add = 20
+				is_historical_focus_on = yes
+			}
+		}
+		custom_effect_tooltip = JAP_sr_honor_pact_tt
+		JAP_sr_cede_target_states_effect = yes
+		add_opinion_modifier = {
+			target = FROM
+			modifier = tripartite_pact_opinion
+		}
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = tripartite_pact_opinion
+		}
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.2
+				hours = 1
+			}
+		}
+	}
+
+	# Demand payment before handing the territories over.
+	option = {
+		name = JAP_southern_road.1.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
+		custom_effect_tooltip = JAP_sr_demand_payment_tt
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.3
+				hours = 1
+			}
+		}
+	}
+
+	# Refuse and accept that the pact will break.
+	option = {
+		name = JAP_southern_road.1.c
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				has_war = no
+			}
+			modifier = {
+				add = -20
+				has_war_with = SOV
+			}
+		}
+		custom_effect_tooltip = JAP_sr_refuse_pact_tt
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.4
+				hours = 1
+			}
+		}
+	}
+}
+
+# 2. Sent to Japan after the partner honors the pact.
+country_event = {
+	id = JAP_southern_road.2
+	title = JAP_southern_road.2.t
+	desc = JAP_southern_road.2.desc
+	picture = GFX_report_event_japan_europe_pact
+	is_triggered_only = yes
+
+	option = {
+		name = JAP_southern_road.2.a
+	}
+}
+
+# 3. Sent to Japan when the partner demands compensation.
+country_event = {
+	id = JAP_southern_road.3
+	title = JAP_southern_road.3.t
+	desc = JAP_southern_road.3.desc
+	picture = GFX_report_event_japan_europe_pact
+	is_triggered_only = yes
+
+	# Pay the price.
+	option = {
+		name = JAP_southern_road.3.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 90
+				JAP_sr_should_accept_axis_demands = yes
+			}
+		}
+		custom_effect_tooltip = JAP_sr_accept_payment_tt
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.5
+				hours = 1
+			}
+		}
+	}
+
+	# Refuse, break the pact, and take the territories by force.
+	option = {
+		name = JAP_southern_road.3.b
+		ai_chance = {
+			base = 90
+			modifier = {
+				add = -90
+				JAP_sr_should_accept_axis_demands = yes
+			}
+		}
+		custom_effect_tooltip = JAP_sr_refuse_payment_tt
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.6
+				hours = 1
+			}
+		}
+	}
+}
+
+# 4. Sent to Japan when the partner breaks the pact.
+country_event = {
+	id = JAP_southern_road.4
+	title = JAP_southern_road.4.t
+	desc = JAP_southern_road.4.desc
+	picture = GFX_report_event_japanese_officers
+	is_triggered_only = yes
+
+	immediate = {
+		JAP_sr_break_pact_effect = yes
+	}
+
+	option = {
+		name = JAP_southern_road.4.a
+		custom_effect_tooltip = JAP_sr_break_pact_tt
+		JAP_sr_grant_wargoals_effect = yes
+	}
+}
+
+# 5. Sent to the partner after Japan agrees to pay.
+country_event = {
+	id = JAP_southern_road.5
+	title = JAP_southern_road.5.t
+	desc = JAP_southern_road.5.desc
+	picture = GFX_report_event_japan_europe_pact
+	is_triggered_only = yes
+
+	option = {
+		name = JAP_southern_road.5.a
+		custom_effect_tooltip = JAP_sr_compensation_tt
+		JAP_sr_cede_target_states_effect = yes
+		JAP_sr_grant_compensation_effect = yes
+		add_opinion_modifier = {
+			target = FROM
+			modifier = tripartite_pact_opinion
+		}
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = tripartite_pact_opinion
+		}
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.2
+				hours = 1
+			}
+		}
+	}
+}
+
+# 6. Sent to the partner after Japan refuses to pay.
+country_event = {
+	id = JAP_southern_road.6
+	title = JAP_southern_road.6.t
+	desc = JAP_southern_road.6.desc
+	picture = GFX_report_event_japanese_officers
+	is_triggered_only = yes
+
+	option = {
+		name = JAP_southern_road.6.a
+		custom_effect_tooltip = JAP_sr_break_pact_partner_tt
+		FROM = {
+			country_event = {
+				id = JAP_southern_road.4
+				hours = 1
+			}
+		}
+	}
+}

@@ -1,0 +1,425 @@
+	focus = {
+		id = JAP_strike_the_southern_road
+		icon = GFX_focus_jap_strike_south
+		#mutually_exclusive = { focus = JAP_sea_pressure_siam }
+		x = -1
+		y = 1
+		relative_position_id = JAP_occupy_siam
+
+		prerequisite = { focus = JAP_occupy_siam focus = JAP_sea_pressure_siam }
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			is_subject = no
+			IF = {
+				limit = {
+					is_ai = no
+				}
+				JAP_naval_faction_is_at_least_influential = yes
+			}
+			OR = {
+				has_government = fascism
+				AND = {
+					has_war_support > 0.95
+					has_army_manpower = { size > 999999 }
+				}
+			}
+			# The focus is only useful while at least one target state is not already ours
+			# (or owned by one of our subjects).
+			any_state = {
+				JAP_sr_target_state = yes
+				NOT = { is_owned_by = ROOT }
+				NOT = { owner = { is_subject_of = ROOT } }
+			}
+		}
+
+		bypass = {
+			OR = {			
+				has_wargoal_against = INS
+				has_war_with = INS
+			}
+			OR = {
+				has_wargoal_against = MAL
+				has_war_with = MAL
+			}
+			OR = {
+				has_wargoal_against = PHI
+				has_war_with = PHI
+			}
+			OR = {
+				AND = {
+					671 = {
+						NOT = { is_controlled_by = FRA }
+					}
+					670 = {
+						NOT = { is_controlled_by = FRA }
+					}
+					286 = {
+						NOT = { is_controlled_by = FRA }
+					}
+					741 = {
+						NOT = { is_controlled_by = FRA }
+					}
+				}
+				has_wargoal_against = FRA
+				has_war_with = FRA
+			}
+		}
+
+		will_lead_to_war_with = PHI
+		will_lead_to_war_with = MAL
+		will_lead_to_war_with = ENG
+		will_lead_to_war_with = FRA
+		will_lead_to_war_with = SNG
+		will_lead_to_war_with = INS
+		will_lead_to_war_with = HOL
+		will_lead_to_war_with = SAR
+		will_lead_to_war_with = SAB
+		will_lead_to_war_with = BRN
+		will_lead_to_war_with = BRM
+		will_lead_to_war_with = WPG
+
+		cancel_if_invalid = no
+		continue_if_invalid = yes
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_HISTORICAL FOCUS_FILTER_ANNEXATION FOCUS_FILTER_IMPERIAL_INFLUENCE }
+
+		completion_reward = {
+
+			# Tripartite Pact partners that already hold parts of the Southern Resource Area
+			# are approached diplomatically before any wargoals are handed out.
+			IF = {
+				limit = {
+					JAP_sr_any_target_state_held_by_signer = yes
+				}
+				custom_effect_tooltip = JAP_sr_negotiations_tt
+			}
+
+			every_country = {
+				limit = {
+					is_subject = no
+					JAP_sr_is_tripartite_signer = yes
+					JAP_sr_controls_target_states = yes
+				}
+				set_country_flag = JAP_sr_request_received
+				country_event = {
+					id = JAP_southern_road.1
+					days = 1
+				}
+			}
+
+			IF = {
+				limit = {
+					JAP_sr_region_philippines_held_by_signer = no
+					PHI = {
+						exists = yes
+						NOT = {
+							is_ally_with = ROOT
+							has_war_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = PHI
+					type = puppet_wargoal_focus
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = PHI
+					value = 200
+				}
+			}
+
+			IF = {
+				limit = {
+					JAP_sr_region_indonesia_held_by_signer = no
+					country_exists = INS
+					NOT = { 
+						has_wargoal_against = INS 
+						has_war_with = INS
+					}
+					IF = {
+						limit = {
+							INS = { is_subject_of = HOL }
+						}
+						OR = {
+							has_country_flag = HOL_declare_war_indies_allowed
+							HOL = { NOT = { has_completed_focus = HOL_placate_the_japanese } }
+						}
+					}
+				}
+				create_wargoal = {
+					target = INS
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = INS
+					value = 200
+				}
+
+				IF = {
+					limit = {
+						INS = {
+							any_core_state = {
+								NOT = {
+									is_owned_and_controlled_by = INS
+								}
+							}
+						}
+					}
+
+					INS = { #I see what you are doing you cheeky exploiter
+						every_core_state = {
+							limit = {
+								NOT = { is_owned_and_controlled_by = PREV }
+							}
+
+							ROOT = {
+								create_wargoal = {
+									target = PREV.controller
+									type = annex_everything
+									expire = 0
+								}
+							}
+						}
+					}
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_indonesia_held_by_signer = no
+					INS = { exists = no }
+					335 = {
+						CONTROLLER = {
+							NOT = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+					IF = {
+						limit = {
+							335 = {
+								CONTROLLER = {
+									tag = HOL
+								}
+							}
+						}
+						OR = {
+							has_country_flag = HOL_declare_war_indies_allowed
+							HOL = { NOT = { has_completed_focus = HOL_placate_the_japanese } }
+						}
+					}
+				}
+				335 = {
+					OWNER = {
+						ROOT = {
+							create_wargoal = {
+								target = PREV
+								type = take_state_focus
+								expire = 0
+								generator = { 335 334 672 673 668 667 669 738 }
+							}
+							add_ai_strategy = {
+								type = conquer
+								id = PREV
+								value = 200
+							}
+						}
+					}
+				}
+				INS_cancel_hol_ally_strategy_entirely_effect = yes
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					NOT = { has_wargoal_against = MAL }
+					NOT = { has_war_with = MAL }
+					country_exists = MAL
+				}
+				create_wargoal = {
+					target = MAL
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = MAL
+					value = 200
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					MAL = { exists = no }
+					336 = {
+						CONTROLLER = {
+							NOT = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+				}
+				336 = {
+					OWNER = {
+						ROOT = {
+							create_wargoal = {
+								target = PREV
+								type = take_state_focus
+								expire = 0
+								generator = { 336 }
+							}
+							add_ai_strategy = {
+								type = conquer
+								id = PREV
+								value = 200
+							}
+						}
+					}
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_indochina_held_by_signer = no
+					OR = {
+						671 = {
+							is_controlled_by = FRA
+						}
+						670 = {
+							is_controlled_by = FRA
+						}
+						286 = {
+							is_controlled_by = FRA
+						}
+						741 = {
+							is_controlled_by = FRA
+						}
+					}
+					NOT = { has_wargoal_against = FRA }
+					NOT = { has_war_with = FRA }
+				}
+				#Might be generating on states FRA does not own, but not worth the time to get it exact. Should have no gameplay impact.
+				create_wargoal = {
+					target = FRA
+					type = take_state_focus
+					expire = 0
+					generator = { 671 670 286 741 }
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_indonesia_held_by_signer = no
+					NOT = { has_wargoal_against = WPG }
+					NOT = { has_war_with = WPG }
+					country_exists = WPG
+				}
+				create_wargoal = {
+					target = WPG
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = WPG
+					value = 200
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					NOT = { has_wargoal_against = SNG }
+					NOT = { has_war_with = SNG }
+					country_exists = SNG
+				}
+				create_wargoal = {
+					target = SNG
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = SNG
+					value = 200
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					NOT = { has_wargoal_against = SAR }
+					NOT = { has_war_with = SAR }
+					country_exists = SAR
+				}
+				create_wargoal = {
+					target = SAR
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = SAR
+					value = 200
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					NOT = { has_wargoal_against = SAB }
+					NOT = { has_war_with = SAB }
+					country_exists = SAB
+				}
+				create_wargoal = {
+					target = SAB
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = SAB
+					value = 200
+				}
+			}
+			IF = {
+				limit = {
+					JAP_sr_region_malaya_held_by_signer = no
+					NOT = { has_wargoal_against = BRN }
+					NOT = { has_war_with = BRN }
+					country_exists = BRN
+				}
+				create_wargoal = {
+					target = BRN
+					type = annex_everything
+					expire = 0
+				}
+				add_ai_strategy = {
+					type = conquer
+					id = BRN
+					value = 200
+				}
+			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			unlock_decision_tooltip = {
+				decision = JAP_establish_the_state_of_burma_decision
+				show_effect_tooltip = no 
+			}
+			unlock_decision_tooltip = {
+				decision = JAP_establish_the_provisional_government_of_free_india_decision
+				show_effect_tooltip = no 
+			}	
+			unlock_decision_tooltip = {
+				decision = JAP_establish_the_second_philippine_republic_decision
+				show_effect_tooltip = no 
+			}	
+
+		}
+
+	}

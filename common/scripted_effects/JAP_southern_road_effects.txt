@@ -1,0 +1,187 @@
+# Scripted effects for the Southern Road Tripartite negotiations.
+# The negotiating Tripartite partner is always ROOT and Japan is always FROM
+# inside the JAP_southern_road events, unless noted otherwise.
+
+# Transfer every target state controlled by the signatory (or its subjects) to Japan.
+JAP_sr_cede_target_states_effect = {
+	every_state = {
+		limit = {
+			JAP_sr_target_state = yes
+			OR = {
+				is_controlled_by = ROOT
+				controller = {
+					is_subject_of = ROOT
+				}
+			}
+		}
+		transfer_state_to = FROM
+	}
+}
+
+# Compensation for ceding the Southern Resource Area.
+# Indonesia: resource rights in West Java (335) and the industry of Batavia (1058).
+# Malaya: the tungsten of Pahang (1063). If the resource filter is not honoured,
+# the game grants the whole state's resources, which is an acceptable fallback.
+# Indochina and the Philippines use their ceded states as a fallback.
+JAP_sr_grant_compensation_effect = {
+	# Indonesia: resource rights in West Java.
+	IF = {
+		limit = {
+			335 = { is_owned_by = FROM }
+		}
+		FROM = {
+			give_resource_rights = {
+				receiver = ROOT
+				state = 335
+			}
+		}
+	}
+
+	# Indonesia: the industry of Batavia (1058) has 1 civilian and 2 military factories.
+	IF = {
+		limit = {
+			1058 = { is_owned_by = FROM }
+		}
+		add_offsite_building = { type = industrial_complex level = 1 }
+		add_offsite_building = { type = arms_factory level = 2 }
+	}
+
+	# Malaya: the tungsten of Pahang.
+	IF = {
+		limit = {
+			1063 = { is_owned_by = FROM }
+		}
+		FROM = {
+			give_resource_rights = {
+				receiver = ROOT
+				state = 1063
+				resources = { tungsten }
+			}
+		}
+	}
+
+	# Fallback for French Indochina.
+	IF = {
+		limit = {
+			OR = {
+				286 = { is_owned_by = FROM }
+				670 = { is_owned_by = FROM }
+				671 = { is_owned_by = FROM }
+				741 = { is_owned_by = FROM }
+			}
+		}
+		FROM = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 286
+						state = 670
+						state = 671
+						state = 741
+					}
+				}
+				PREV = {
+					give_resource_rights = {
+						receiver = ROOT
+						state = PREV
+					}
+				}
+			}
+		}
+	}
+
+	# Fallback for the Philippines.
+	IF = {
+		limit = {
+			OR = {
+				327 = { is_owned_by = FROM }
+				623 = { is_owned_by = FROM }
+				624 = { is_owned_by = FROM }
+				625 = { is_owned_by = FROM }
+				626 = { is_owned_by = FROM }
+				627 = { is_owned_by = FROM }
+				628 = { is_owned_by = FROM }
+				1025 = { is_owned_by = FROM }
+				1026 = { is_owned_by = FROM }
+				1027 = { is_owned_by = FROM }
+			}
+		}
+		FROM = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 327
+						state = 623
+						state = 624
+						state = 625
+						state = 626
+						state = 627
+						state = 628
+						state = 1025
+						state = 1026
+						state = 1027
+					}
+				}
+				PREV = {
+					give_resource_rights = {
+						receiver = ROOT
+						state = PREV
+					}
+				}
+			}
+		}
+	}
+}
+
+# Break the Tripartite Pact from Japan's side.
+JAP_sr_break_pact_effect = {
+	set_country_flag = JAP_sr_tripartite_pact_broken
+	add_opinion_modifier = {
+		target = FROM
+		modifier = refused_tripartite_pact_opinion
+	}
+	reverse_add_opinion_modifier = {
+		target = FROM
+		modifier = refused_tripartite_pact_opinion
+	}
+	FROM = {
+		diplomatic_relation = {
+			country = ROOT
+			relation = non_aggression_pact
+			active = no
+		}
+		if = {
+			limit = {
+				is_in_faction_with = ROOT
+			}
+			remove_from_faction = ROOT
+		}
+	}
+}
+
+# Give Japan a wargoal on the signatory for the Southern Resource Area.
+JAP_sr_grant_wargoals_effect = {
+	if = {
+		limit = {
+			NOT = { has_wargoal_against = FROM }
+			NOT = { has_war_with = FROM }
+		}
+		create_wargoal = {
+			type = take_state_focus
+			target = FROM
+			expire = 0
+			generator = {
+				334 335 667 668 669 672 673 738
+				1022 1047 1048 1049 1050 1051 1052 1053 1054 1055 1056 1057 1058
+				333 336 1023 1024 1059 1060 1061 1062 1063 1064
+				327 623 624 625 626 627 628 1025 1026 1027
+				286 670 671 741
+			}
+		}
+	}
+	add_ai_strategy = {
+		type = conquer
+		id = FROM
+		value = 200
+	}
+}
